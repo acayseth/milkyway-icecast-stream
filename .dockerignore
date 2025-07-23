@@ -1,0 +1,65 @@
+# Ignore logs and temporary files
+logs/
+*.log
+*.tmp
+*.swp
+*.swo
+*~
+
+# Ignore git files
+.git/
+.gitignore
+.gitattributes
+
+# Ignore development files
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+docker-compose.override.yml
+
+# Ignore documentation
+README.md
+docs/
+*.md
+
+# Ignore IDE and editor files
+.vscode/
+.idea/
+*.sublime-*
+.DS_Store
+Thumbs.db
+
+# Ignore backup files
+backup-*.tar.gz
+*.backup
+*.bak
+
+# Ignore node modules if any
+node_modules/
+npm-debug.log*
+
+# Ignore build artifacts
+dist/
+build/
+target/
+
+# Ignore OS files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Ignore large media files during build (they will be mounted)
+storage/data/*.mp3
+storage/data/*.wav
+storage/data/*.flac
+storage/data/*.ogg
+
+# Keep structure but ignore content
+!storage/data/.gitignore
+!storage/playlist/.gitignore

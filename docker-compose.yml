@@ -1,0 +1,57 @@
+version: "3.8"
+
+services:
+  icecast-stream:
+    build: .
+    container_name: milky-way-icecast
+    restart: unless-stopped
+    ports:
+      - "8000:8000" # Icecast HTTP port
+      - "8001:8001" # Icecast admin port
+      - "1234:1234" # Liquidsoap telnet
+      - "9001:9001" # Supervisor web interface
+    volumes:
+      - ./storage/data:/app/storage/data:ro
+      - ./storage/playlist:/app/storage/playlist:ro
+      # - ./logs:/var/log/icecast2
+      # - ./logs:/var/log/liquidsoap
+      # - ./logs:/var/log/supervisor
+    environment:
+      - TZ=Europe/Bucharest
+      - ICECAST_SOURCE_PASSWORD=changeme123
+      - ICECAST_ADMIN_PASSWORD=changeme123
+      - ICECAST_RELAY_PASSWORD=changeme123
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/admin/stats.xml"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    networks:
+      - icecast-network
+
+  # Optional: Nginx reverse proxy for production
+  nginx:
+    image: nginx:alpine
+    container_name: milky-way-nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/ssl:/etc/nginx/ssl:ro
+    depends_on:
+      - icecast-stream
+    networks:
+      - icecast-network
+    profiles:
+      - production
+
+networks:
+  icecast-network:
+    driver: bridge
+
+volumes:
+  logs:
+    driver: local
